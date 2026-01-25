@@ -1,0 +1,16 @@
+{
+  "name": "ppt-agent-slidev",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "slidev",
+    "playground": "slidev slidev_playground/slide.md",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.48.0",
+    "@slidev/theme-default": "^0.25.0",
+    "playwright-chromium": "^1.40.0"
+  }
+}

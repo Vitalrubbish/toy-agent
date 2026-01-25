@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# Node
+node_modules/
+.npmrc
+
+# Playwright
+.playwright-browsers/
+
+# Logs and Output
+output/
+*.log
+error.txt
+
+# OS
+.DS_Store
+Thumbs.db
