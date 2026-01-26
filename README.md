@@ -31,6 +31,10 @@ This project implements an AI agent system capable of generating high-quality pr
     Create a `.env` file in the root directory:
     ```
     OPENAI_API_KEY=sk-your-api-key-here
+    # Optional: switch provider to DeepSeek
+    # LLM_PROVIDER=deepseek
+    # DEEPSEEK_API_KEY=sk-your-deepseek-key
+    # DEEPSEEK_BASE_URL=https://api.deepseek.com
     ```
 
 ## Usage

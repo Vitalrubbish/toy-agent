@@ -44,23 +44,6 @@ def strip_code_fence(text: str) -> str:
             return "\n".join(lines[1:-1]).strip() + "\n"
     return text
 
-
-def normalize_frontmatter(text: str) -> str:
-    lines = text.splitlines()
-    out: List[str] = []
-    in_frontmatter = False
-    for line in lines:
-        if line.strip() == "---":
-            out.append(line)
-            in_frontmatter = not in_frontmatter
-            continue
-        if in_frontmatter and line.lstrip().startswith("#"):
-            out.append("---")
-            in_frontmatter = False
-        out.append(line)
-    return "\n".join(out).rstrip() + "\n"
-
-
 def is_approved(feedback: List[dict]) -> bool:
     return not feedback
 
@@ -78,7 +61,15 @@ def run(
 
     raw_content = read_text_file(input_path)
 
-    model_name = os.getenv("LLM_MODEL", model_name)
+    provider = os.getenv("LLM_PROVIDER", "openai")
+    model_name = os.getenv("LLM_MODEL") or model_name
+    if not model_name:
+        model_name = "gpt-4o"
+    if os.getenv("LLM_MODEL") is None:
+        if provider == "deepseek":
+            model_name = "deepseek-chat"
+        elif provider == "moonshot":
+            model_name = "moonshot-v1-8k"
 
     editor = EditorAgent(model_name=model_name)
     critic = CriticAgent(model_name=model_name)
@@ -113,7 +104,7 @@ def run(
             append_run_log("Editor: refining slides")
             slides_md = editor.refine_slides(slides_md, feedback)
 
-        slides_md = normalize_frontmatter(strip_code_fence(slides_md))
+        slides_md = strip_code_fence(slides_md)
 
         editor_log_path = os.path.join(logs_dir, f"iter_{iteration}_editor.txt")
         editor_output = editor.last_response or slides_md
@@ -128,16 +119,34 @@ def run(
 
         append_run_log("Rendering slides to images")
         clear_dir(images_dir)
-        image_paths = runner.render_slides(slides_path, images_dir)
+        image_paths = []
+        render_error = None
+        try:
+            image_paths = runner.render_slides(slides_path, images_dir)
+        except RenderError as e:
+            render_error = str(e)
+            append_run_log("Render failed. Sending error back to editor for fixes")
 
-        append_run_log(f"Rendered {len(image_paths)} slide images")
+        if render_error:
+            feedback = [
+                {
+                    "issue": "Render Error",
+                    "details": render_error,
+                    "severity": "CRITICAL",
+                }
+            ]
+            critic_log_path = os.path.join(logs_dir, f"iter_{iteration}_critic.txt")
+            write_text_file(critic_log_path, json.dumps(feedback, ensure_ascii=False, indent=2))
+            append_run_log(f"Render error logged to {critic_log_path}")
+        else:
+            append_run_log(f"Rendered {len(image_paths)} slide images")
 
-        append_run_log("Critic: reviewing slides")
-        feedback = critic.review(image_paths)
-        critic_log_path = os.path.join(logs_dir, f"iter_{iteration}_critic.txt")
-        critic_output = critic.last_response or json.dumps(feedback, ensure_ascii=False, indent=2)
-        write_text_file(critic_log_path, critic_output)
-        append_run_log(f"Critic output saved to {critic_log_path}")
+            append_run_log("Critic: reviewing slides")
+            feedback = critic.review(image_paths, slides_md=slides_md)
+            critic_log_path = os.path.join(logs_dir, f"iter_{iteration}_critic.txt")
+            critic_output = critic.last_response or json.dumps(feedback, ensure_ascii=False, indent=2)
+            write_text_file(critic_log_path, critic_output)
+            append_run_log(f"Critic output saved to {critic_log_path}")
 
         iter_dir = os.path.join(history_dir, f"iter_{iteration}")
         ensure_dir(iter_dir)

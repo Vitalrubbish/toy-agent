@@ -29,6 +29,9 @@ class LLMClient:
         elif provider == "moonshot":
             api_key = api_key or os.getenv("MOONSHOT_API_KEY") or os.getenv("OPENAI_API_KEY")
             base_url = base_url or os.getenv("MOONSHOT_BASE_URL", "https://api.moonshot.cn/v1")
+        elif provider == "deepseek":
+            api_key = api_key or os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")
+            base_url = base_url or os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
         else:
             raise ValueError(f"Unsupported provider: {provider}")
 
@@ -39,6 +42,12 @@ class LLMClient:
             self.client = OpenAI(api_key=api_key, base_url=base_url)
         else:
             self.client = OpenAI(api_key=api_key)
+
+    def supports_vision(self) -> bool:
+        env_flag = os.getenv("LLM_SUPPORTS_VISION")
+        if env_flag is not None:
+            return env_flag.strip().lower() in {"1", "true", "yes", "on"}
+        return self.provider in {"openai"}
 
     def chat_completion(
         self,

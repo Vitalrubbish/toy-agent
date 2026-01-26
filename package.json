@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "slidev",
-    "playground": "slidev slidev_playground/slide.md",
+    "example": "slidev rules/example.md",
+    "work": "slidev output/current/slides.md",
     "build": "slidev build",
     "export": "slidev export"
   },

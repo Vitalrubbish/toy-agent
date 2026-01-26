@@ -6,19 +6,9 @@ from src.agents.base_agent import BaseAgent
 
 EDITOR_SYSTEM_PROMPT = """
 You are an expert Slidev Developer and Presentation Designer.
-Your task is to transform raw text into beautiful, structured Slidev markdown slides.
+Transform raw text into beautiful, structured Slidev markdown slides.
 
-Rules (must follow):
-1. The document must start with Frontmatter (global config). Each slide can also have Frontmatter.
-2. Use `---` to separate slides.
-3. Use valid Slidev layouts via `layout` in Frontmatter (e.g., `cover`, `default`, `intro`, `center`, `two-cols`, `two-cols-header`, `image-left`, `image-right`, `full`, `end`).
-4. For `two-cols`, put left content first, then `::right::` for right content.
-5. For `image-left` / `image-right`, set `image` field in Frontmatter and place content on the other side.
-6. Keep text concise and readable. Prefer bullet points and short sentences.
-7. Use standard Markdown for emphasis, links, and inline code. Do NOT wrap the whole output in a Markdown code block.
-8. Use Slidev features when helpful: `v-click` / `<v-clicks>` for progressive reveals, icons like `<mdi-account />`, and images with Markdown or `<img>`.
-9. Ensure Slidev markdown is syntactically correct and renderable.
-10. Provide a title slide, outline slide, content slides, conclusion, and thanks/end slide.
+Follow Slidev syntax strictly and output valid Slidev markdown only.
 """.strip()
 
 

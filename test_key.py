@@ -11,7 +11,11 @@ else:
     print("❌ 未找到 .env 文件，将尝试使用系统环境变量")
 
 # 2. 获取 API Key
-api_key = os.getenv("OPENAI_API_KEY")
+provider = os.getenv("LLM_PROVIDER", "openai")
+if provider == "deepseek":
+    api_key = os.getenv("DEEPSEEK_API_KEY") or os.getenv("OPENAI_API_KEY")
+else:
+    api_key = os.getenv("OPENAI_API_KEY")
 
 if not api_key:
     print("❌ 错误: 未读取到 OPENAI_API_KEY，请检查 .env 文件内容或格式。")
@@ -27,7 +31,10 @@ try:
     client = OpenAI(api_key=api_key)
     
     # 根据你的 .env 配置，如果设置了 BASE_URL 也需要传递
-    base_url = os.getenv("OPENAI_BASE_URL")
+    if provider == "deepseek":
+        base_url = os.getenv("DEEPSEEK_BASE_URL") or os.getenv("OPENAI_BASE_URL")
+    else:
+        base_url = os.getenv("OPENAI_BASE_URL")
     if base_url:
         print(f"ℹ️ 使用自定义 Base URL: {base_url}")
         client.base_url = base_url

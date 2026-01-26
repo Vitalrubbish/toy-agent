@@ -28,12 +28,18 @@ class BaseAgent:
         if self.system_prompt:
             messages.append({"role": "system", "content": self.system_prompt})
 
-        if image_paths:
+        if image_paths and self.llm_client.supports_vision():
             content: List[Dict[str, Any]] = [{"type": "text", "text": user_content}]
             for path in image_paths:
                 content.append(self.llm_client.build_image_content(path))
             messages.append({"role": "user", "content": content})
         else:
+            if image_paths:
+                user_content = (
+                    "Note: Image inputs are not supported by the current provider. "
+                    "Please review based on the text content only.\n\n"
+                    + user_content
+                )
             messages.append({"role": "user", "content": user_content})
 
         return messages
