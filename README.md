@@ -12,7 +12,7 @@ This project implements an AI agent system capable of generating high-quality pr
 
 1.  Current directory:
     ```bash
-    cd "mnt/d/forum/第一期AI Agent/PPT-agent"
+    cd "PATH_TO_THE_ROOT_OF_THE_PROJECT"
     ```
 
 2.  Install Python dependencies:
