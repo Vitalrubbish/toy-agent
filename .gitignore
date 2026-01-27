@@ -6,6 +6,8 @@ venv/
 .venv/
 .env
 docs.zip
+package.json
+package-lock.json
 
 # Node
 node_modules/
