@@ -19,12 +19,23 @@ Requirements:
 5) Use appropriate font sizes; avoid tiny text.
 6) Limit text on each slide to 50 words maximum.
 7) Use Slidev layouts correctly: `layout` belongs in a slide frontmatter block immediately after `---`.
-8) When using slidev layouts, there isn't any empty lines between `---` and the layout declaration, and you must have an extra '---' block right after the layout declaration.
+8) CRITICAL: When defining a layout, do NOT include any empty lines between the `---` delimiters and the `layout` key.
+   Correct Example:
+   ---
+   layout: two-cols
+   ---
+   Incorrect Example (Forbidden):
+   ---
+   
+   layout: two-cols
+   
+   ---
 9) Do not declare multiple layouts in one slide; create a new slide instead.
 10) For two-column layouts, use `layout: two-cols` and `::right::` blocks correctly.
 11) You are encouraged to use two-cols layout to enhance visual appeal whenever suitable.
 12) You are encouraged to insert a properly sized Mermaid flowchart or a data form to improve clarity whenever helpful.
 13) Make the presentation sufficiently detailed; prefer adding slides over sparse content.
+14) Please maintain formulas accurately, code snippets, and any technical details in your slides. 
 """.strip()
 
 
