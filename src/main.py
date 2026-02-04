@@ -8,9 +8,9 @@ from typing import List
 import typer
 from dotenv import load_dotenv
 
-from src.agents.editor import EditorAgent
-from src.agents.critic import CriticAgent
-from src.utils.slidev_runner import SlidevRunner, RenderError
+from agents.editor import EditorAgent
+from agents.critic import CriticAgent
+from utils.slidev_runner import SlidevRunner, RenderError
 
 
 app = typer.Typer(add_completion=False)
@@ -70,16 +70,18 @@ def run(
     critic_model = os.getenv("CRITIC_LLM_MODEL") or os.getenv("LLM_MODEL") or default_model
 
     if os.getenv("EDITOR_LLM_MODEL") is None and os.getenv("LLM_MODEL") is None:
-        if editor_provider == "deepseek":
-            editor_model = "deepseek-chat"
-        elif editor_provider == "moonshot":
-            editor_model = "moonshot-v1-8k"
+        if editor_provider == "openai":
+            editor_model = "gpt-4o"
+        else:
+            print("模型未指定，供应商不是OpenAI")
+            exit(1)
 
     if os.getenv("CRITIC_LLM_MODEL") is None and os.getenv("LLM_MODEL") is None:
-        if critic_provider == "deepseek":
-            critic_model = "deepseek-chat"
-        elif critic_provider == "moonshot":
-            critic_model = "moonshot-v1-8k"
+        if critic_provider == "openai":
+            critic_model = "gpt-4o"
+        else:
+            print("模型未指定，供应商不是OpenAI")
+            exit(1)
 
     editor = EditorAgent(model_name=editor_model, provider=editor_provider)
     critic = CriticAgent(model_name=critic_model, provider=critic_provider)
@@ -109,6 +111,7 @@ def run(
             f.write(line)
         typer.echo(message)
 
+    # Outline
     append_run_log("Editor: generating outline")
     outline_md = editor.generate_outline(raw_content)
     outline_log_path = os.path.join(logs_dir, f"outline_{run_stamp}.md")
@@ -122,8 +125,12 @@ def run(
         typer.echo(f"Outline saved at {outline_path}")
         return
 
+
+    # Editor: Slides
     for iteration in range(1, max_iterations + 1):
         append_run_log(f"Iteration {iteration}/{max_iterations} started")
+
+        # slides.md
         if iteration == 1:
             append_run_log("Editor: generating draft")
             slides_md = editor.generate_draft(raw_content, outline=outline_md)
@@ -141,6 +148,7 @@ def run(
         write_text_file(editor_log_path, editor_output)
         append_run_log(f"Editor output saved to {editor_log_path}")
 
+        # Render
         slides_path = os.path.join(current_dir, "slides.md")
         candidate_path = os.path.join(current_dir, "slides_candidate.md")
         write_text_file(candidate_path, slides_md)

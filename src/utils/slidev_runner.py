@@ -45,32 +45,10 @@ class SlidevRunner:
         env.setdefault("PLAYWRIGHT_DISABLE_SANDBOX", "1")
         env.setdefault("PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS", "1")
 
-        chromium_path = (
-            shutil.which("chromium")
-            or shutil.which("chromium-browser")
-            or shutil.which("google-chrome")
-            or shutil.which("google-chrome-stable")
-            or shutil.which("chrome")
-            or shutil.which("brave-browser")
-        )
-        if chromium_path and "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH" not in env:
-            env["PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH"] = chromium_path
-            revision = self._get_chromium_headless_revision()
-            if revision:
-                stub_root = os.path.join(self.work_dir, ".playwright-browsers")
-                stub_dir = os.path.join(
-                    stub_root,
-                    f"chromium_headless_shell-{revision}",
-                    "chrome-headless-shell-linux64",
-                )
-                stub_path = os.path.join(stub_dir, "chrome-headless-shell")
-                os.makedirs(stub_dir, exist_ok=True)
-                if not os.path.exists(stub_path) or not os.access(stub_path, os.X_OK):
-                    with open(stub_path, "w", encoding="utf-8") as stub_file:
-                        stub_file.write("#!/usr/bin/env bash\n")
-                        stub_file.write(f"exec {chromium_path} \"$@\"\n")
-                    os.chmod(stub_path, 0o755)
-                env["PLAYWRIGHT_BROWSERS_PATH"] = stub_root
+        chromium_path = os.getenv("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH")
+
+        if not chromium_path:
+            raise RuntimeError("Cannot find PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH in .env.")
 
         base_cmd = [
             "npx",
@@ -102,6 +80,7 @@ class SlidevRunner:
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                shell=True,
             )
             if result.returncode == 0:
                 last_error = ""
