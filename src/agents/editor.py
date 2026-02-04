@@ -2,7 +2,7 @@ import json
 import os
 from typing import Dict, List
 
-from src.agents.base_agent import BaseAgent
+from agents.base_agent import BaseAgent
 
 
 EDITOR_SYSTEM_PROMPT = """

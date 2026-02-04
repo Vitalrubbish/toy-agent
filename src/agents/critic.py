@@ -2,8 +2,8 @@ import json
 import os
 from typing import Dict, List
 
-from src.agents.base_agent import BaseAgent
-from src.utils.llm_client import LLMClient
+from agents.base_agent import BaseAgent
+from utils.llm_client import LLMClient
 
 
 CRITIC_SYSTEM_PROMPT = """

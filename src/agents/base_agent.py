@@ -1,7 +1,7 @@
 import os
 from typing import Any, Dict, List, Optional
 
-from src.utils.llm_client import LLMClient, LLMResponse
+from utils.llm_client import LLMClient, LLMResponse
 
 
 class BaseAgent:
