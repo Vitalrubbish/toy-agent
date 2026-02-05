@@ -53,4 +53,5 @@ class BaseAgent:
         )
         self.history.append({"user": user_content, "assistant": response.content})
         self.last_response = response.content
+        self.last_response_usage = response.usage
         return response
