@@ -233,14 +233,14 @@ def run(
     for iteration in range(1, max_iterations + 1):
         
         iteration_start = time.time()
-        editor_adjustments: List[dict] = []
-        editor_summary: dict = {}
+        # editor_adjustments: List[dict] = []
+        # editor_summary: dict = {}
         iteration_input_tokens = 0
         iteration_output_tokens = 0
         iteration_cost = 0.0
         agent_breakdown: dict = {}
 
-        append_run_log(f"Iteration {iteration}/{max_iterations} started")
+        append_run_log(f"\nIteration {iteration}/{max_iterations} started")
 
         # slides.md
         if iteration == 1:
@@ -263,9 +263,15 @@ def run(
 
         if editor.last_response_usage:
             editor_usage = editor.last_response_usage
-            editor_input = editor_usage.get("prompt_tokens", 0)
-            editor_output = editor_usage.get("completion_tokens", 0)
-            editor_cost = LLMClient.calculate_context_cost(editor_usage)
+            if "input_tokens" in editor_usage:
+                editor_input = editor_usage.get("input_tokens", 0)
+            else:
+                editor_input = editor_usage.get("prompt_tokens", 0)
+            if "output_tokens" in editor_usage:
+                editor_output = editor_usage.get("output_tokens", 0) + editor_usage.get("reasoning_tokens", 0)
+            else:
+                editor_output = editor_usage.get("completion_tokens", 0)
+            editor_cost = LLMClient.calculate_context_cost(editor_input, editor_output)
             total_input_tokens += editor_input
             total_output_tokens += editor_output
             total_cost += editor_cost
@@ -327,9 +333,15 @@ def run(
 
                 if critic.last_response_usage:
                     critic_usage = critic.last_response_usage
-                    critic_input = critic_usage.get("prompt_tokens", 0)
-                    critic_output_tokens = critic_usage.get("completion_tokens", 0)
-                    critic_cost = LLMClient.calculate_context_cost(critic_usage)
+                    if "input_tokens" in critic_usage:
+                        critic_input = critic_usage.get("input_tokens", 0)
+                    else:
+                        critic_input = critic_usage.get("prompt_tokens", 0)
+                    if "output_tokens" in critic_usage:
+                        critic_output_tokens = critic_usage.get("output_tokens", 0) + critic_usage.get("reasoning_tokens", 0)
+                    else:
+                        critic_output_tokens = critic_usage.get("completion_tokens", 0)
+                    critic_cost = LLMClient.calculate_context_cost(critic_input, critic_output_tokens)
                     total_input_tokens += critic_input
                     total_output_tokens += critic_output_tokens
                     total_cost += critic_cost
@@ -351,9 +363,15 @@ def run(
 
                 if editor.last_response_usage:
                     review_usage = editor.last_response_usage
-                    review_input = review_usage.get("prompt_tokens", 0)
-                    review_output = review_usage.get("completion_tokens", 0)
-                    review_cost = LLMClient.calculate_context_cost(review_usage)
+                    if "input_tokens" in review_usage:
+                        review_input = review_usage.get("input_tokens", 0)
+                    else:
+                        review_input = review_usage.get("prompt_tokens", 0)
+                    if "output_tokens" in review_usage:
+                        review_output = review_usage.get("output_tokens", 0) + review_usage.get("reasoning_tokens", 0)
+                    else:
+                        review_output = review_usage.get("completion_tokens", 0)
+                    review_cost = LLMClient.calculate_context_cost(review_input, review_output)
                     total_input_tokens += review_input
                     total_output_tokens += review_output
                     total_cost += review_cost

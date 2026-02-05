@@ -21,24 +21,25 @@ Requirements:
 5) Use appropriate font sizes; avoid tiny text.
 6) Limit text on each slide to 50 words maximum.
 7) Use Slidev layouts correctly: `layout` belongs in a slide frontmatter block immediately after `---`.
-8) CRITICAL: When defining a layout, do NOT include any empty lines between the `---` delimiters and the `layout` key.
+8) CRITICAL: When defining a layout, DO NOT include any empty lines between the `---` delimiters and the `layout` key!
    Correct Example:
    ---
-   layout: two-cols
+   layout: center
    ---
-   Incorrect Example (Forbidden):
+   Incorrect Example (FORBIDDEN):
    ---
    
-   layout: two-cols
+   layout: center
    
    ---
-9) Do not declare multiple layouts in one slide; create a new slide instead.
-10) For two-column layouts, use `layout: two-cols` and `::right::` blocks correctly.
-11) You are encouraged to use two-cols layout to enhance visual appeal whenever suitable.
-12) You are encouraged to insert a properly sized Mermaid flowchart or a data form to improve clarity whenever helpful.
-13) Inside Mermaid nodes, always use <br/> for line breaks instead of \n to ensure correct rendering.
-14) Make the presentation sufficiently detailed; prefer adding slides over sparse content.
-15) Please maintain formulas accurately, code snippets, and any technical details in your slides. 
+9) Use `---` only once as a separator between slides. Avoid redundant or empty horizontal rules.
+10) Do not declare multiple layouts in one slide; create a new slide instead.
+11) For two-column layouts, use `layout: two-cols` and `::right::` blocks correctly.
+12) You are encouraged to use two-cols layout to enhance visual appeal whenever suitable.
+13) You are encouraged to insert a properly sized Mermaid flowchart or a data form to improve clarity whenever helpful.
+14) Inside Mermaid nodes, always use `<br/>` for line breaks. Prefer `graph LR` (Left-to-Right) layouts to ensure the diagram fits within the slide width.
+15) Make the presentation sufficiently detailed; prefer adding slides over sparse content.
+16) Please maintain formulas, code snippets, and any technical details accurately in your slides. Use $\LaTeX$ appropriately.
 """.strip()
 
 
