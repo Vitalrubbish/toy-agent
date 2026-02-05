@@ -33,7 +33,7 @@ If a slide is perfect, you may omit it from the list.
 
 
 class CriticAgent(BaseAgent):
-    def __init__(self, model_name: str = "gpt-4o", provider: str | None = None):
+    def __init__(self, model_name: str = "gpt-5.1", provider: str | None = None):
         provider = provider or os.getenv("CRITIC_LLM_PROVIDER") or "moonshot"
         super().__init__(role="Critic", model_name=model_name, provider=provider)
         self.set_system_prompt(CRITIC_SYSTEM_PROMPT)

@@ -5,7 +5,7 @@ from utils.llm_client import LLMClient, LLMResponse
 
 
 class BaseAgent:
-    def __init__(self, role: str, model_name: str = "gpt-4o", provider: Optional[str] = None):
+    def __init__(self, role: str, model_name: str = "gpt-5.1", provider: Optional[str] = None):
         self.role = role
         self.model_name = model_name
         provider = provider or os.getenv("LLM_PROVIDER", "openai")

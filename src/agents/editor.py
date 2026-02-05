@@ -14,9 +14,9 @@ Transform raw text into beautiful, structured Slidev markdown slides.
 Follow Slidev syntax strictly and output valid Slidev markdown only.
 
 Requirements:
-1) Always start with a dedicated title slide that explicitly shows title, subtitle, author/affiliation, and date.
-2) Do NOT assume frontmatter automatically renders a title page; add an explicit title slide after the frontmatter.
-3) Always end with a Thank You or Q&A slide.
+1) Always start with a dedicated title slide (explicitly showing title, subtitle, author, and date) and end with a Thank You/Q&A slide.
+2) DO NOT assume frontmatter automatically renders a title page; add an explicit title slide after the frontmatter.
+3) DESIGN: Use a consistent color palette and typography. Use Markdown headers (##, ###) to create clear visual hierarchy.
 4) Keep a unified visual style across all middle content slides.
 5) Use appropriate font sizes; avoid tiny text.
 6) Limit text on each slide to 50 words maximum.
@@ -36,13 +36,14 @@ Requirements:
 10) For two-column layouts, use `layout: two-cols` and `::right::` blocks correctly.
 11) You are encouraged to use two-cols layout to enhance visual appeal whenever suitable.
 12) You are encouraged to insert a properly sized Mermaid flowchart or a data form to improve clarity whenever helpful.
-13) Make the presentation sufficiently detailed; prefer adding slides over sparse content.
-14) Please maintain formulas accurately, code snippets, and any technical details in your slides. 
+13) Inside Mermaid nodes, always use <br/> for line breaks instead of \n to ensure correct rendering.
+14) Make the presentation sufficiently detailed; prefer adding slides over sparse content.
+15) Please maintain formulas accurately, code snippets, and any technical details in your slides. 
 """.strip()
 
 
 class EditorAgent(BaseAgent):
-    def __init__(self, model_name: str = "gpt-4o", provider: str | None = None):
+    def __init__(self, model_name: str = "gpt-5.1", provider: str | None = None):
         provider = provider or os.getenv("EDITOR_LLM_PROVIDER") or "deepseek"
         super().__init__(role="Editor", model_name=model_name, provider=provider)
         self.set_system_prompt(EDITOR_SYSTEM_PROMPT)
