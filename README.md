@@ -44,6 +44,7 @@ This project implements an AI agent system capable of generating high-quality pr
 
     PLAYWRIGHT_BROWSERS_PATH="PATH_TO_PLAYWRIGHT_BROWSERS"
     PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="PATH_TO_PLAYWRIGHT_CHROMIUM_EXECUTABLE"
+    MODE="dual"
     ```
     
 

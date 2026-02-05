@@ -144,7 +144,7 @@ def run(
     output_dir: str = "outputs",
     max_iterations: int = 5,
     model_name: str = "gpt-4o",
-    mode: str = "dual", # single / dual
+    mode: str = "",
 ):
     """Run the PPT-Agent pipeline."""
     load_dotenv()
@@ -160,6 +160,8 @@ def run(
     editor_model = os.getenv("EDITOR_LLM_MODEL") or os.getenv("LLM_MODEL") or default_model
     critic_model = os.getenv("CRITIC_LLM_MODEL") or os.getenv("LLM_MODEL") or default_model
 
+    mode = os.getenv("MODE") or mode or "dual"
+    
     if os.getenv("EDITOR_LLM_MODEL") is None and os.getenv("LLM_MODEL") is None:
         if editor_provider == "openai":
             editor_model = "gpt-4o"
